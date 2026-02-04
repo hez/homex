@@ -101,6 +101,8 @@ defmodule Homex.Entity.Sensor do
       @state_class opts[:state_class]
       @retain opts[:retain]
 
+      def set_value(val), do: GenServer.cast(__MODULE__, {:value, val})
+
       @impl Homex.Entity
       def name, do: @name
 
@@ -145,6 +147,12 @@ defmodule Homex.Entity.Sensor do
 
       @impl Homex.Entity
       def handle_timer(entity), do: super(entity)
+
+      @impl GenServer
+      def handle_cast({:value, val}, entity) do
+        entity = entity |> Entity.put_change(:state, val) |> Entity.execute_change()
+        {:noreply, entity}
+      end
 
       defoverridable handle_init: 1, handle_timer: 1
     end
