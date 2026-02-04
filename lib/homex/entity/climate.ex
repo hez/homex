@@ -169,19 +169,19 @@ defmodule Homex.Entity.Climate do
       @doc """
       Publishes the current humidity via the current_humidity_topic.
       """
-      def set_current_humidity(val) when is_float(val),
+      def set_current_humidity(val) when is_number(val),
         do: GenServer.cast(__MODULE__, {:current_humidity, val})
 
       @doc """
       Publishes the current temperature via the current_temperature_topic.
       """
-      def set_current_temperature(val) when is_float(val),
+      def set_current_temperature(val) when is_number(val),
         do: GenServer.cast(__MODULE__, {:current_temperature, val})
 
       @doc """
       Publishes a target temperature via the temperature_state_topic.
       """
-      def set_target_temperature(val) when is_float(val),
+      def set_target_temperature(val) when is_number(val),
         do: GenServer.cast(__MODULE__, {:target_temperature, val})
 
       @doc """
