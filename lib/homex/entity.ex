@@ -205,6 +205,10 @@ defmodule Homex.Entity do
   end
 
   @impl GenServer
+  def handle_cast({:push_value, key, value}, entity) do
+    {:noreply, entity |> put_change(key, value) |> execute_change()}
+  end
+
   # Fallback, passes the casted msg along to the implementation for handling and
   # calling execute_change after.
   def handle_cast(msg, %{impl: impl} = entity) do
