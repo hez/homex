@@ -132,9 +132,10 @@ defmodule Homex.Entity do
   end
 
   @doc false
-  @spec execute_change(t()) :: t()
+  @spec execute_change(t(), boolean()) :: t()
   def execute_change(
-        %__MODULE__{keys: keys, values: values, changes: changes, handlers: handlers} = entity
+        %__MODULE__{keys: keys, values: values, changes: changes, handlers: handlers} = entity,
+        store \\ true
       ) do
     values =
       for key <- keys, into: %{} do
@@ -146,7 +147,11 @@ defmodule Homex.Entity do
           handler.(change)
         end
 
-        {key, change}
+        if store do
+          {key, change}
+        else
+          {key, value}
+        end
       end
 
     %{entity | changes: %{}, values: values}
@@ -205,8 +210,8 @@ defmodule Homex.Entity do
   end
 
   @impl GenServer
-  def handle_cast({:push_value, key, value}, entity) do
-    {:noreply, entity |> put_change(key, value) |> execute_change()}
+  def handle_cast({:push_value, key, value, store}, entity) do
+    {:noreply, entity |> put_change(key, value) |> execute_change(store)}
   end
 
   # Fallback, passes the casted msg along to the implementation for handling and
