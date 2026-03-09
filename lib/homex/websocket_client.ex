@@ -39,7 +39,7 @@ defmodule Homex.WebsocketClient do
   end
 
   @impl true
-  def handle_disconnect(%{reason: reason, conn: conn}, state) do
+  def handle_disconnect(%{reason: reason}, state) do
     Logger.warning("WebSocket disconnected, attempting reconnect: #{inspect(reason)}")
     {:reconnect, state}
   end
